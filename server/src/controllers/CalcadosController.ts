@@ -45,20 +45,46 @@ export const getAllCalcado = async (req: Request, res: Response) => {
     }
 };
 
+export const getCalcadosByTamanho = async (req: Request, res: Response) => {
+    try {
+
+        const { tamanho } = req.params;
+
+        const tamanhoNum = parseInt(tamanho, 10);
+
+        if (isNaN(tamanhoNum)) {
+            return res.status(400).json({ message: "O tamanho deve ser um número válido." });
+        }
+
+        const calcados = await calcadoRepository.getCalcadoByTamanho(tamanhoNum);
+
+        if (calcados.length === 0) {
+            return res.status(404).json({
+                message: "Nenhum calçado encontrado com este tamanho."
+            });
+        }
+
+        return res.status(200).json(calcados);
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erro ao buscar calçados por tamanho.",
+            error
+        });
+    }
+};
+
 export const updateCalcado = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const data = req.body;
 
-        // 1. Converte a string da URL para número inteiro
         const calcadoId = parseInt(id, 10);
 
-        // 2. Valida se é um número válido
         if (isNaN(calcadoId)) {
             return res.status(400).json({ message: "O ID do produto deve ser um número válido." });
         }
 
-        // 3. Passa o NÚMERO e os DADOS para o repositório
         const updatedCalcado = await calcadoRepository.updateCalcado(calcadoId, data);
 
         return res.status(200).json({
@@ -78,15 +104,12 @@ export const deleteCalcado = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        // 1. Converte a string da URL para número inteiro
         const calcadoId = parseInt(id, 10);
 
-        // 2. Valida se é um número válido
         if (isNaN(calcadoId)) {
             return res.status(400).json({ message: "O ID do produto deve ser um número válido." });
         }
 
-        // 3. Passa o NÚMERO para o repositório
         await calcadoRepository.deleteCalcado(calcadoId);
 
         return res.status(200).json({

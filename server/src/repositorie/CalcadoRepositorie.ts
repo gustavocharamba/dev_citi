@@ -23,6 +23,13 @@ export const calcadoRepository = {
         return prods
     },
 
+    getCalcadoByTamanho: async (tamanho: number) => {
+        const prod = await prisma.calcado.findMany({
+            where: {tamanho: tamanho},
+        })
+        return prod
+    },
+
     updateCalcado: async(id: number, data: Prisma.CalcadoCreateInput) => {
         const prod = await prisma.calcado.update({
             where: {id: id},
