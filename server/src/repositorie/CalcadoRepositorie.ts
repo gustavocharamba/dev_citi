@@ -30,6 +30,12 @@ export const calcadoRepository = {
         return prod
     },
 
+    getCalcadoByMarca: async (marca: string) => {
+        return await prisma.calcado.findMany({
+            where: { marca: marca }
+        });
+    },
+
     updateCalcado: async(id: number, data: Prisma.CalcadoCreateInput) => {
         const prod = await prisma.calcado.update({
             where: {id: id},

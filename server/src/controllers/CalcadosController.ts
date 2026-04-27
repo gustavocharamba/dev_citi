@@ -74,6 +74,32 @@ export const getCalcadosByTamanho = async (req: Request, res: Response) => {
     }
 };
 
+export const getCalcadosByMarca = async (req: Request, res: Response) => {
+    try {
+        const { marca } = req.params;
+
+        if(!marca){
+            return res.status(400).json({ message: "Marca não fornecida na requisição." });
+        }
+
+        const calcados = await calcadoRepository.getCalcadoByMarca(marca);
+
+        if (calcados.length === 0) {
+            return res.status(404).json({
+                message: "Nenhum calçado encontrado com esta marca."
+            });
+        }
+
+        return res.status(200).json(calcados);
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erro ao buscar calçados por marca.",
+            error
+        });
+    }
+}
+
 export const updateCalcado = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
