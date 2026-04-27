@@ -36,6 +36,22 @@ export const calcadoRepository = {
         });
     },
 
+    getTotalEstoque: async () => {
+        const resultado = await prisma.calcado.aggregate({
+            _sum: {
+                quantidade_em_estoque: true,
+            },
+        });
+        
+        const totalPares = resultado._sum.quantidade_em_estoque;
+
+        if (totalPares === null) {
+            return 0;
+        }
+
+        return totalPares;
+    },
+
     updateCalcado: async(id: number, data: Prisma.CalcadoCreateInput) => {
         const prod = await prisma.calcado.update({
             where: {id: id},

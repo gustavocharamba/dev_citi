@@ -100,6 +100,23 @@ export const getCalcadosByMarca = async (req: Request, res: Response) => {
     }
 }
 
+export const getTotalEstoque = async (req: Request, res: Response) => {
+    try {
+        const totalPares = await calcadoRepository.getTotalEstoque();
+
+        return res.status(200).json({
+            message: "Contagem de estoque realizada com sucesso.",
+            total_pares_em_estoque: totalPares
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erro ao calcular o estoque total.",
+            error
+        });
+    }
+};
+
 export const updateCalcado = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
